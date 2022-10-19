@@ -23,8 +23,8 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="70dp"
-        android:fontFamily="@font/brawler"
+        android:layout_marginBottom="80dp"
+        android:fontFamily="@font/metal_mania"
         android:text="@string/app_name"
         android:textColor="@color/main_red"
         android:textSize="38sp"
@@ -33,5 +33,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/design"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/brawler"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:src="@drawable/heart"
+            android:layout_marginHorizontal="3dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/author"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/brawler"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

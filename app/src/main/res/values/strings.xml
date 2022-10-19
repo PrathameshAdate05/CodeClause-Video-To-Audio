@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Audio Extractor</string>
+    <string name="design">Made with</string>
+    <string name="author">By Prathamesh</string>
 </resources>
