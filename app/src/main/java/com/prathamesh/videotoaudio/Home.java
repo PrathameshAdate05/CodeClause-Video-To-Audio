@@ -5,17 +5,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,10 +25,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.arthenica.mobileffmpeg.AsyncFFmpegExecuteTask;
 import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.ExecuteCallback;
 import com.arthenica.mobileffmpeg.FFmpeg;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
@@ -45,6 +46,8 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
     String filePath, bit, vol;
     File file;
 
+    TextView Bottom_Sheet_Done_OK, Bottom_sheet_Failed_OK;
+
     Spinner Spinner_Bitrate, Spinner_Volume;
 
     String[] BitRates = {"128K","192K","320K"};
@@ -53,6 +56,7 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
     LinearLayout LLAttributes;
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,7 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
 
         Spinner_Bitrate = findViewById(R.id.Spinner_BitRate);
         Spinner_Volume = findViewById(R.id.Spinner_Volume);
+
 
         LLAttributes = findViewById(R.id.LL_Attributes);
         LLAttributes.setVisibility(View.GONE);
@@ -77,6 +82,24 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
 
         Spinner_Bitrate.setAdapter(ad_bitrate);
         Spinner_Volume.setAdapter(ad_volume);
+
+        BottomSheetDialog bottomSheetDialogDone = new BottomSheetDialog(this,R.style.BottomSheetStyle);
+        View bottomSheetDoneView = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_done,null);
+        Bottom_Sheet_Done_OK = bottomSheetDoneView.findViewById(R.id.Bottom_Sheet_Done_OK);
+        bottomSheetDialogDone.setContentView(bottomSheetDoneView);
+
+        BottomSheetDialog bottomSheetDialogFailed = new BottomSheetDialog(this,R.style.BottomSheetStyle);
+        View bottomSheetFailedView = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_failed,null);
+        Bottom_sheet_Failed_OK = bottomSheetFailedView.findViewById(R.id.Bottom_Sheet_Failed_OK);
+        bottomSheetDialogFailed.setContentView(bottomSheetFailedView);
+
+        Bottom_sheet_Failed_OK.setOnClickListener(view -> {
+            bottomSheetDialogFailed.dismiss();
+        });
+
+        Bottom_Sheet_Done_OK.setOnClickListener(view -> {
+            bottomSheetDialogDone.dismiss();
+        });
 
         Spinner_Bitrate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -154,16 +177,16 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
                 public void apply(long executionId, int returnCode) {
 
                         if (returnCode == Config.RETURN_CODE_SUCCESS){
-                            Toast.makeText(Home.this, "Success", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             TV_File_Path.setText("");
                             LLAttributes.setVisibility(View.GONE);
+                            bottomSheetDialogDone.show();
 
                         }else {
-                            Toast.makeText(Home.this, "Failed", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             LLAttributes.setVisibility(View.GONE);
                             TV_File_Path.setText("");
+                            bottomSheetDialogFailed.show();
                         }
                 }
             });
