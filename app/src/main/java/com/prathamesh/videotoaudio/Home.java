@@ -5,16 +5,29 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arthenica.mobileffmpeg.AsyncFFmpegExecuteTask;
+import com.arthenica.mobileffmpeg.Config;
+import com.arthenica.mobileffmpeg.ExecuteCallback;
+import com.arthenica.mobileffmpeg.FFmpeg;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
@@ -29,8 +42,16 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
     MaterialButton BTN_Picker, BTN_Extract;
     public static final int PICK_FILE_RESULT_CODE = 1;
     Uri fileUri;
-    String filePath;
+    String filePath, bit, vol;
     File file;
+
+    Spinner Spinner_Bitrate, Spinner_Volume;
+
+    String[] BitRates = {"128K","192K","320K"};
+    String[] Volumes = {"0.5x","1x","1.5x","2x"};
+
+    LinearLayout LLAttributes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +61,49 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
         TV_File_Path = findViewById(R.id.TV_File_Picker);
         BTN_Picker = findViewById(R.id.BTN_Picker);
         BTN_Extract = findViewById(R.id.BTN_Extract);
+
+        Spinner_Bitrate = findViewById(R.id.Spinner_BitRate);
+        Spinner_Volume = findViewById(R.id.Spinner_Volume);
+
+        LLAttributes = findViewById(R.id.LL_Attributes);
+        LLAttributes.setVisibility(View.GONE);
+
+
+        ArrayAdapter ad_bitrate = new ArrayAdapter(this, android.R.layout.simple_spinner_item,BitRates);
+        ArrayAdapter ad_volume = new ArrayAdapter(this, android.R.layout.simple_spinner_item,Volumes);
+
+        ad_bitrate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ad_volume.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner_Bitrate.setAdapter(ad_bitrate);
+        Spinner_Volume.setAdapter(ad_volume);
+
+        Spinner_Bitrate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                int tempBit = Integer.parseInt(BitRates[i].substring(0,BitRates[i].length()-1));
+                bit = String.valueOf(tempBit*1000);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        Spinner_Volume.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                vol = "volume=" + Volumes[i].substring(0,Volumes[i].length()-1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         BTN_Picker.setOnClickListener(view -> {
 
@@ -60,10 +124,71 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
         });
 
         BTN_Extract.setOnClickListener(view -> {
+
+            ProgressDialog progressDialog = new ProgressDialog(Home.this);
+            progressDialog.setMessage("Extracting...");
+            progressDialog.show();
+
             String video = TV_File_Path.getText().toString();
             String[] temp = TV_File_Path.getText().toString().split("/");
             String filename = temp[temp.length-1].substring(0,temp[temp.length-1].length()-4);
-            String audio = "AudioExtractor"+filename+".mp3";
+            String ext = ".mp3";
+
+            File musicDir = Environment.getExternalStoragePublicDirectory("Music/Audio Extractor");
+
+            int fileno = 0;
+            File destination = new File(musicDir, filename+ext);
+
+            while (destination.exists()){
+                fileno++;
+                destination = new File(musicDir,filename+String.valueOf(fileno)+ext);
+            }
+
+            filePath = destination.getAbsolutePath();
+
+            String[] command = {"-y", "-i", video, "-f", "mp3", "-ab", bit,"-af",vol, "-vn", filePath};
+
+            FFmpeg.executeAsync(command, new ExecuteCallback() {
+
+                @Override
+                public void apply(long executionId, int returnCode) {
+
+                        if (returnCode == Config.RETURN_CODE_SUCCESS){
+                            Toast.makeText(Home.this, "Success", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            TV_File_Path.setText("");
+                            LLAttributes.setVisibility(View.GONE);
+
+                        }else {
+                            Toast.makeText(Home.this, "Failed", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            LLAttributes.setVisibility(View.GONE);
+                            TV_File_Path.setText("");
+                        }
+                }
+            });
+        });
+
+
+        TV_File_Path.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().equals("")){
+                    LLAttributes.setVisibility(View.GONE);
+                }else {
+                    LLAttributes.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
         });
     }
 

@@ -7,17 +7,17 @@
     tools:context=".Home">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="20dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/LL_Attributes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/TV_File_Picker"
@@ -26,7 +26,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/roboto"
             android:gravity="center"
-            android:hint="Choose File..."
+            android:hint="No File Selected"
             android:padding="10dp"
             android:textSize="20sp" />
 
@@ -36,23 +36,80 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto"
             android:gravity="center"
-            android:text="Browse"
+            android:text="Choose File"
             android:textAllCaps="false"
             android:textSize="16sp"
-            app:icon="@drawable/ic_baseline_file"
+            app:icon="@drawable/ic_baseline_attach_file"
             app:iconGravity="start" />
     </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/LL_Attributes"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="96dp"
-        android:textAllCaps="false"
-        android:id="@+id/BTN_Extract"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Extract"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:orientation="horizontal"
+           android:gravity="center_horizontal"
+           android:layout_height="wrap_content">
+           <TextView
+               android:layout_width="wrap_content"
+               android:text="BitRate :"
+               android:fontFamily="@font/roboto"
+               android:textSize="16sp"
+               android:textColor="@color/black"
+               android:layout_height="wrap_content"/>
+
+           <Spinner
+               android:layout_width="wrap_content"
+                android:layout_gravity="center"
+               android:textAlignment="center"
+               android:gravity="center"
+               android:id="@+id/Spinner_BitRate"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:text="Volume :"
+               android:layout_marginStart="5dp"
+               android:fontFamily="@font/roboto"
+               android:textSize="16sp"
+               android:textColor="@color/black"
+               android:layout_height="wrap_content"/>
+
+           <Spinner
+               android:layout_width="wrap_content"
+               android:id="@+id/Spinner_Volume"
+               android:textAlignment="center"
+               android:gravity="center"
+               android:layout_gravity="center"
+               android:layout_height="wrap_content"/>
+       </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/BTN_Extract"
+            android:layout_marginTop="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Extract"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:textSize="18sp"
+            app:cornerRadius="15dp"
+            android:backgroundTint="@color/dark_grey"
+            android:fontFamily="@font/roboto"
+            android:textAllCaps="false"
+            />
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,16 +4,20 @@ plugins {
 
 android {
     namespace 'com.prathamesh.videotoaudio'
-    compileSdk 32
+    compileSdk 33
+
 
     defaultConfig {
         applicationId "com.prathamesh.videotoaudio"
-        minSdk 21
-        targetSdk 32
+        minSdk 24
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
     }
 
     buildTypes {
@@ -51,4 +55,9 @@ dependencies {
     implementation 'pub.devrel:easypermissions:3.0.0'
 
 
+    //implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+
+    dependencies {
+        implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
+    }
 }
