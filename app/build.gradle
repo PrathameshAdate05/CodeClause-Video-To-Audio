@@ -30,7 +30,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
 
-
     }
 }
 
@@ -54,9 +53,7 @@ dependencies {
     // For developers using the Android Support Library
     implementation 'pub.devrel:easypermissions:3.0.0'
 
-
-    //implementation 'com.writingminds:FFmpegAndroid:0.3.2'
-
+    // FFmpeg mobile library
     dependencies {
         implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
     }

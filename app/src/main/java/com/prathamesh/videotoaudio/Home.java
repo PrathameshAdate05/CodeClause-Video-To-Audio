@@ -50,11 +50,10 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
 
     Spinner Spinner_Bitrate, Spinner_Volume;
 
-    String[] BitRates = {"128K","192K","320K"};
-    String[] Volumes = {"0.5x","1x","1.5x","2x"};
+    String[] BitRates = {"128K", "192K", "320K"};
+    String[] Volumes = {"0.5x", "1x", "1.5x", "2x"};
 
     LinearLayout LLAttributes;
-
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -69,13 +68,11 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
         Spinner_Bitrate = findViewById(R.id.Spinner_BitRate);
         Spinner_Volume = findViewById(R.id.Spinner_Volume);
 
-
         LLAttributes = findViewById(R.id.LL_Attributes);
         LLAttributes.setVisibility(View.GONE);
 
-
-        ArrayAdapter ad_bitrate = new ArrayAdapter(this, android.R.layout.simple_spinner_item,BitRates);
-        ArrayAdapter ad_volume = new ArrayAdapter(this, android.R.layout.simple_spinner_item,Volumes);
+        ArrayAdapter ad_bitrate = new ArrayAdapter(this, android.R.layout.simple_spinner_item, BitRates);
+        ArrayAdapter ad_volume = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Volumes);
 
         ad_bitrate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ad_volume.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -83,13 +80,13 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
         Spinner_Bitrate.setAdapter(ad_bitrate);
         Spinner_Volume.setAdapter(ad_volume);
 
-        BottomSheetDialog bottomSheetDialogDone = new BottomSheetDialog(this,R.style.BottomSheetStyle);
-        View bottomSheetDoneView = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_done,null);
+        BottomSheetDialog bottomSheetDialogDone = new BottomSheetDialog(this, R.style.BottomSheetStyle);
+        View bottomSheetDoneView = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_done, null);
         Bottom_Sheet_Done_OK = bottomSheetDoneView.findViewById(R.id.Bottom_Sheet_Done_OK);
         bottomSheetDialogDone.setContentView(bottomSheetDoneView);
 
-        BottomSheetDialog bottomSheetDialogFailed = new BottomSheetDialog(this,R.style.BottomSheetStyle);
-        View bottomSheetFailedView = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_failed,null);
+        BottomSheetDialog bottomSheetDialogFailed = new BottomSheetDialog(this, R.style.BottomSheetStyle);
+        View bottomSheetFailedView = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_failed, null);
         Bottom_sheet_Failed_OK = bottomSheetFailedView.findViewById(R.id.Bottom_Sheet_Failed_OK);
         bottomSheetDialogFailed.setContentView(bottomSheetFailedView);
 
@@ -101,12 +98,12 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
             bottomSheetDialogDone.dismiss();
         });
 
+        // spinner bitrate
         Spinner_Bitrate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                int tempBit = Integer.parseInt(BitRates[i].substring(0,BitRates[i].length()-1));
-                bit = String.valueOf(tempBit*1000);
+                int tempBit = Integer.parseInt(BitRates[i].substring(0, BitRates[i].length() - 1));
+                bit = String.valueOf(tempBit * 1000);
             }
 
             @Override
@@ -115,11 +112,12 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
             }
         });
 
+        // spinner volume
         Spinner_Volume.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                vol = "volume=" + Volumes[i].substring(0,Volumes[i].length()-1);
+                vol = "volume=" + Volumes[i].substring(0, Volumes[i].length() - 1);
             }
 
             @Override
@@ -154,40 +152,40 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
 
             String video = TV_File_Path.getText().toString();
             String[] temp = TV_File_Path.getText().toString().split("/");
-            String filename = temp[temp.length-1].substring(0,temp[temp.length-1].length()-4);
+            String filename = temp[temp.length - 1].substring(0, temp[temp.length - 1].length() - 4);
             String ext = ".mp3";
 
             File musicDir = Environment.getExternalStoragePublicDirectory("Music/Audio Extractor");
 
             int fileno = 0;
-            File destination = new File(musicDir, filename+ext);
+            File destination = new File(musicDir, filename + ext);
 
-            while (destination.exists()){
+            while (destination.exists()) {
                 fileno++;
-                destination = new File(musicDir,filename+String.valueOf(fileno)+ext);
+                destination = new File(musicDir, filename + String.valueOf(fileno) + ext);
             }
 
             filePath = destination.getAbsolutePath();
 
-            String[] command = {"-y", "-i", video, "-f", "mp3", "-ab", bit,"-af",vol, "-vn", filePath};
+            String[] command = {"-y", "-i", video, "-f", "mp3", "-ab", bit, "-af", vol, "-vn", filePath};
 
             FFmpeg.executeAsync(command, new ExecuteCallback() {
 
                 @Override
                 public void apply(long executionId, int returnCode) {
 
-                        if (returnCode == Config.RETURN_CODE_SUCCESS){
-                            progressDialog.dismiss();
-                            TV_File_Path.setText("");
-                            LLAttributes.setVisibility(View.GONE);
-                            bottomSheetDialogDone.show();
+                    if (returnCode == Config.RETURN_CODE_SUCCESS) {
+                        progressDialog.dismiss();
+                        TV_File_Path.setText("");
+                        LLAttributes.setVisibility(View.GONE);
+                        bottomSheetDialogDone.show();
 
-                        }else {
-                            progressDialog.dismiss();
-                            LLAttributes.setVisibility(View.GONE);
-                            TV_File_Path.setText("");
-                            bottomSheetDialogFailed.show();
-                        }
+                    } else {
+                        progressDialog.dismiss();
+                        LLAttributes.setVisibility(View.GONE);
+                        TV_File_Path.setText("");
+                        bottomSheetDialogFailed.show();
+                    }
                 }
             });
         });
@@ -201,9 +199,9 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().equals("")){
+                if (charSequence.toString().equals("")) {
                     LLAttributes.setVisibility(View.GONE);
-                }else {
+                } else {
                     LLAttributes.setVisibility(View.VISIBLE);
                 }
             }
@@ -230,10 +228,10 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
                     String wholeID = DocumentsContract.getDocumentId(fileUri);
                     // Split at colon, use second item in the array
                     String id = wholeID.split(":")[1];
-                    String[] column = { MediaStore.Images.Media.DATA };
+                    String[] column = {MediaStore.Images.Media.DATA};
                     // where id is equal to
                     String sel = MediaStore.Images.Media._ID + "=?";
-                    Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{ id }, null);
+                    Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
                     int columnIndex = 0;
                     if (cursor != null) {
                         columnIndex = cursor.getColumnIndex(column[0]);
@@ -247,7 +245,6 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
                 }
         }
     }
-
 
 
     private File getDisc() {
@@ -271,8 +268,7 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         Toast.makeText(this, "Permissions Denied!", Toast.LENGTH_SHORT).show();
     }
-
-
+    
     // taking permissions
     private void takePermissions() {
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
