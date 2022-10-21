@@ -15,6 +15,7 @@ It also provides the options like customizable Bitrate and customizable Volume o
 ## Screenshots
 
 * Splash Screen
+
 ![App Screenshot](https://i.postimg.cc/X7GXs10H/Screenshot-20221021-170145.jpg)
 
 * Home Screen
