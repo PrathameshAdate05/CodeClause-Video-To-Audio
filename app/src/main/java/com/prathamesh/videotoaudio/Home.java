@@ -268,7 +268,7 @@ public class Home extends AppCompatActivity implements EasyPermissions.Permissio
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         Toast.makeText(this, "Permissions Denied!", Toast.LENGTH_SHORT).show();
     }
-    
+
     // taking permissions
     private void takePermissions() {
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
